@@ -14,6 +14,11 @@ class AuthController extends Controller
     ) {
     }
 
+    public function register(Request $request)
+    {
+       dd("test");
+    }
+
     public function login(Request $request)
     {
         $data = $request->validate([
@@ -45,38 +50,37 @@ class AuthController extends Controller
         }
     }
 
-    public function register(Request $request)
-    {
-dd("test");
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
-        ]);
+    // public function register(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'name' => 'required',
+    //         'email' => 'required',
+    //         'password' => 'required'
+    //     ]);
 
-        try {
-            $user = $this->authService->register($data);
+    //     try {
+    //         $user = $this->authService->register($data);
             
-            return response()->json([
-                'status' => 'success',
-                'data' => $user,
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid registration data',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            \Log::error('Error during registration: ' . $e->getMessage());
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'data' => $user,
+    //         ]);
+    //     } catch (ValidationException $e) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Invalid registration data',
+    //             'errors' => $e->errors()
+    //         ], 422);
+    //     } catch (\Exception $e) {
+    //         \Log::error('Error during registration: ' . $e->getMessage());
             
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred during registration.',
-                'error_code' => $e->getCode()
-            ], 500);
-        }
-    }
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'An error occurred during registration.',
+    //             'error_code' => $e->getCode()
+    //         ], 500);
+    //     }
+    // }
 
     public function logout(Request $request)
     {
