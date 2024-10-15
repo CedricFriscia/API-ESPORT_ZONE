@@ -3,128 +3,96 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Services\UserService;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
     public function __construct(
-        protected UserService $userService
+        protected AuthService $authService
     ) {
     }
 
-    public function index(): JsonResponse
+    public function login(Request $request)
     {
+        $data = $request->validate([
+            'name' => 'required',
+            'password' => 'required'
+        ]);
+
         try {
-            $users = $this->userService->all();
+            $user = $this->authService->login($data);
             
             return response()->json([
                 'status' => 'success',
-                'data' => $users,
-                'total_count' => $users->count(),
-                'version' => '1.0'
+                'data' => $user,
             ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid credentials',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la récupération des utilisateurs: ' . $e->getMessage());
+            \Log::error('Error during login: ' . $e->getMessage());
             
             return response()->json([
                 'status' => 'error',
-                'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
+                'message' => 'An error occurred during login.',
                 'error_code' => $e->getCode()
             ], 500);
         }
     }
 
-    public function store(Request $request): JsonResponse
+    public function register(Request $request)
     {
+dd("test");
+        $data = $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
         try {
-            $data = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email',
-                'password' => 'required|string|min:8|confirmed'
-            ]);
-
-            $user = $this->userService->create($data);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Utilisateur créé avec succès',
-                'data' => $user
-            ], 201);
-        } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création de l\'utilisateur: ' . $e->getMessage());
+            $user = $this->authService->register($data);
             
             return response()->json([
+                'status' => 'success',
+                'data' => $user,
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
                 'status' => 'error',
-                'message' => 'Une erreur est survenue lors de la création de l\'utilisateur.',
-                'error_code' => $e->getCode()
+                'message' => 'Invalid registration data',
+                'errors' => $e->errors()
             ], 422);
-        }
-    }
-
-    public function show($id): JsonResponse
-    {
-        try {
-            $user = $this->userService->find($id);
-            
-            return response()->json([
-                'status' => 'success',
-                'data' => $user
-            ]);
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la récupération de l\'utilisateur: ' . $e->getMessage());
+            \Log::error('Error during registration: ' . $e->getMessage());
             
             return response()->json([
                 'status' => 'error',
-                'message' => 'Utilisateur non trouvé.',
+                'message' => 'An error occurred during registration.',
                 'error_code' => $e->getCode()
-            ], 404);
+            ], 500);
         }
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function logout(Request $request)
     {
         try {
-            $data = $request->validate([
-                'name' => 'sometimes|required|string|max:255',
-                'email' => 'sometimes|required|string|email|max:255|unique:users,email,'.$id,
-                'password' => 'sometimes|required|string|min:8|confirmed'
-            ]);
-
-            $user = $this->userService->update($data, $id);
-
+            $this->authService->logout($request->user());
+            
             return response()->json([
                 'status' => 'success',
-                'message' => 'Utilisateur mis à jour avec succès',
-                'data' => $user
+                'message' => 'Successfully logged out',
             ]);
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la mise à jour de l\'utilisateur: ' . $e->getMessage());
+            \Log::error('Error during logout: ' . $e->getMessage());
             
             return response()->json([
                 'status' => 'error',
-                'message' => 'Une erreur est survenue lors de la mise à jour de l\'utilisateur.',
-                'error_code' => $e->getCode()
-            ], 422);
-        }
-    }
-
-    public function destroy($id): JsonResponse
-    {
-        try {
-            $this->userService->delete($id);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Utilisateur supprimé avec succès'
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('Erreur lors de la suppression de l\'utilisateur: ' . $e->getMessage());
-            
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Une erreur est survenue lors de la suppression de l\'utilisateur.',
+                'message' => 'An error occurred during logout.',
                 'error_code' => $e->getCode()
             ], 500);
         }

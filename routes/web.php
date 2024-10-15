@@ -2,5 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-
-route::group(['middleware' => 'auth:sanctum'], function () {});
+Route::get('/', function () {
+    return view('welcome');
+});

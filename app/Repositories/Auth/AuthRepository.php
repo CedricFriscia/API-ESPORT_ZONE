@@ -5,48 +5,37 @@ namespace App\Repositories\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 
 class AuthRepository implements AuthRepositoryInterface
 {
-    public function login(array $data)
+    public function login(array $data): ?User
     {
         $credentials = [
-            'email' => $data['email'],
+            'email' => $data['name'],
             'password' => $data['password']
         ];
 
-        if (Auth::attempt($credentials)) {
-            return Auth::user();
-        }
-
-        return null;
-    }
-
-    public function register(array $data)
-    {
-        try {
-            // Vérifier si l'email existe déjà
-            if (User::where('email', $data['email'])->exists()) {
-                throw new \Exception('Un utilisateur avec cet email existe déjà.');
-            }
-
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password'])
+        if (!Auth::attempt($credentials)) {
+            throw ValidationException::withMessages([
+                'email' => ['Les informations de connexion sont incorrectes.'],
             ]);
-
-            return $user;
-        } catch (QueryException $e) {
-            // Gérer les erreurs de base de données
-            throw new \Exception('Une erreur est survenue lors de l\'enregistrement.');
         }
+
+        return Auth::user();
     }
 
-    public function logout()
+    public function register(array $data): User
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password'])
+        ]);
+    }
+
+    public function logout(): void
     {
         Auth::logout();
-        return true;
     }
 }

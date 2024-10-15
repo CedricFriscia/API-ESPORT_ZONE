@@ -8,11 +8,11 @@ interface ArticleRepositoryInterface
 
     public function getAllArticles();
 
-    public function getArticlesByName();
+    public function getArticlesByName(string $name);
     
-    public function getOneArticle();
+    public function getOneArticle(int $articleId);
 
-    public function userArticlesCount();
+    public function userArticlesCount(int $userId);
  
     public function updateArticle(array $data, $id);
 

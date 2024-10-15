@@ -3,34 +3,40 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function all()
+    public function getAllUser(): Collection
     {
         return User::all();
     }
 
-    public function create(array $data)
+    public function getOneUser(int $userId): ?User
     {
-        return User::create($data);
+        return User::find($userId);
     }
 
-    public function update(array $data, $id)
+    public function updateUser(array $data, int $id): ?User
     {
-        $user = User::findOrFail($id);
+        $user = $this->getOneUser($id);
+
+        if (!$user) {
+            return null;
+        }
+
         $user->update($data);
-        return $user;
+        return $user->fresh();
     }
 
-    public function delete($id)
+    public function deleteUser(int $id): bool
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-    }
+        $user = $this->getOneUser($id);
 
-    public function find($id)
-    {
-        return User::findOrFail($id);
+        if (!$user) {
+            return false;
+        }
+
+        return $user->delete();
     }
 }

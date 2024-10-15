@@ -4,13 +4,11 @@ namespace App\Repositories\User;
 
 interface UserRepositoryInterface
 {
-    public function create(array $data);
+    public function getAllUser();
 
-    public function all();
+    public function updateUser(array $data, int $id);
 
-    public function update(array $data, $id);
+    public function deleteUser(int $userId);
 
-    public function delete($id);
-
-    public function find($id);
+    public function getOneUser(int $userId);
 }

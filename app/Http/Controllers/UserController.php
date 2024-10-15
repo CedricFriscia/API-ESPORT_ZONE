@@ -13,19 +13,17 @@ class UserController extends Controller
     ) {
     }
 
-    public function index()
+    public function getAllUser()
 {
     try {
-        $users = $this->userService->all();
+        $users = $this->userService->getAllUser();
         
         return response()->json([
             'status' => 'success',
             'data' => $users,
             'total_count' => $users->count(),
-            'version' => '1.0'
         ]);
     } catch (\Exception $e) {
-        // Log l'erreur pour le débogage
         \Log::error('Erreur lors de la récupération des utilisateurs: ' . $e->getMessage());
         
         return response()->json([
@@ -36,53 +34,77 @@ class UserController extends Controller
     }
 }
 
-    public function create()
-    {
-        return view('users.create');
-    }
+public function getOneUser(Request $request)
+{
+    $userId = $request->input('user_id');
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:users,email',
-            'password' => 'required|confirmed'
+    try {
+        $user = $this->userService->getOneUser( $userId);
+        
+        return response()->json([
+            'status' => 'success',
+            'data' => $user,
         ]);
-
-        $user = $this->userService->create($data);
-
-        return redirect()->route('users.show', $user->id);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la récupération des utilisateurs: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
+            'error_code' => $e->getCode()
+        ], 500);
     }
+}
 
-    public function show($id)
-    {
-        $user = $this->userService->find($id);
-        return view('users.show', compact('user'));
-    }
+public function deleteUser(Request $request)
+{
+    $userId = $request->input('user_id');
 
-    public function edit($id)
-    {
-        $user = $this->userService->find($id);
-        return view('users.edit', compact('user'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|unique:users,email,'.$id,
-            'password' => 'sometimes|confirmed'
+    try {
+        $user = $this->userService->deleteUser( $userId);
+        
+        return response()->json([
+            'status' => 'success',
+            'data' => $user,
         ]);
-
-        $user = $this->userService->update($data, $id);
-
-        return redirect()->route('users.show', $user->id);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la récupération des utilisateurs: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
+            'error_code' => $e->getCode()
+        ], 500);
     }
+}
 
-    public function destroy($id)
-    {
-        $this->userService->delete($id);
+public function updateUser(Request $request)
+{
+    $userId = $request->input('user_id');
 
-        return redirect()->route('users.index');
+    $data = $request->validate([
+        'name' => 'required',
+        'email' => 'required',
+        'password' => 'required'
+    ]);
+
+    try {
+        $user = $this->userService->updateUser( $data, $userId);
+        
+        return response()->json([
+            'status' => 'success',
+            'data' => $user,
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Erreur lors de la récupération des utilisateurs: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
+            'error_code' => $e->getCode()
+        ], 500);
     }
+}
+
+   
 }
