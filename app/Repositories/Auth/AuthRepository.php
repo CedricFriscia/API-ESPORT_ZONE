@@ -9,20 +9,26 @@ use Illuminate\Validation\ValidationException;
 
 class AuthRepository implements AuthRepositoryInterface
 {
-    public function login(array $data): ?User
+    public function login(array $data)
     {
         $credentials = [
-            'email' => $data['name'],
+            'name' => $data['name'],
             'password' => $data['password']
         ];
-
+    
         if (!Auth::attempt($credentials)) {
             throw ValidationException::withMessages([
-                'email' => ['Les informations de connexion sont incorrectes.'],
+                'message' => ['Les informations de connexion sont incorrectes.'],
             ]);
         }
-
-        return Auth::user();
+    
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+    
+        return [
+            'user' => $user,
+            'access_token' => $token,
+        ];
     }
 
     public function register(array $data): User

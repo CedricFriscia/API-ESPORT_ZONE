@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Repositories\User;
+namespace App\Repositories\Article;
 
 interface ArticleRepositoryInterface
 {
@@ -16,7 +16,5 @@ interface ArticleRepositoryInterface
  
     public function updateArticle(array $data, $id);
 
-    public function deleteArticle($id);
-
-    public function find($id);
+    public function deleteArticle(int $articleId);
 }

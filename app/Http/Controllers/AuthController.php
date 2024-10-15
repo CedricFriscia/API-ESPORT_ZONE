@@ -17,35 +17,36 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $data = $request->validate([
-            'name' => 'required',
-            'password' => 'required'
-        ]);
+{
+    $data = $request->validate([
+        'name' => 'required',
+        'password' => 'required'
+    ]);
 
-        try {
-            $user = $this->authService->login($data);
-            
-            return response()->json([
-                'status' => 'success',
-                'data' => $user,
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid credentials',
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            \Log::error('Error during login: ' . $e->getMessage());
-            
-            return response()->json([
-                'status' => 'error',
-                'message' => 'An error occurred during login.',
-                'error_code' => $e->getCode()
-            ], 500);
-        }
+    try {
+        $loginData = $this->authService->login($data);
+        
+        return response()->json([
+            'status' => 'success',
+            'user' => $loginData['user'],
+            'access_token' => $loginData['access_token'],
+        ]);
+    } catch (ValidationException $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid credentials',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        \Log::error('Error during login: ' . $e->getMessage());
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occurred during login.',
+            'error_code' => $e->getCode()
+        ], 500);
     }
+}
 
     public function register(Request $request)
     {

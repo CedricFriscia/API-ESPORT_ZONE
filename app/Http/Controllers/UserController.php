@@ -8,15 +8,17 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function __construct(
-      protected UserService $userService
-    ) {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
     }
 
-    public function getAllUser()
+    public function getAllUsers()
 {
     try {
-        $users = $this->userService->getAllUser();
+        $users = $this->userService->getAllUsers();
         
         return response()->json([
             'status' => 'success',

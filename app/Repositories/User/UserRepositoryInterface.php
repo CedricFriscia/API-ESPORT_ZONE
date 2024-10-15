@@ -4,7 +4,7 @@ namespace App\Repositories\User;
 
 interface UserRepositoryInterface
 {
-    public function getAllUser();
+    public function getAllUsers();
 
     public function updateUser(array $data, int $id);
 

@@ -21,9 +21,9 @@ class UserService
         return $this->userRepository->deleteUser($userId);
     }
 
-    public function getAllUser()
+    public function getAllUsers()
     {
-        return $this->userRepository->getAllUser();
+        return $this->userRepository->getAllUsers();
     }
     
     public function getOneUser(int $userId)

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function getAllUser(): Collection
+    public function getAllUsers(): Collection
     {
         return User::all();
     }
@@ -39,4 +39,6 @@ class UserRepository implements UserRepositoryInterface
 
         return $user->delete();
     }
+
+
 }
