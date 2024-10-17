@@ -29,8 +29,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AuthService::class, function ($app) {
             return new AuthService($app->make(AuthRepositoryInterface::class));
         });
-
-
         $this->app->bind(ArticleRepositoryInterface::class, ArticleRepository::class);
         $this->app->bind(ArticleService::class, function ($app) {
             return new ArticleService($app->make(ArticleRepositoryInterface::class));

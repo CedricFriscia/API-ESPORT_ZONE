@@ -4,7 +4,7 @@ namespace App\Repositories\Article;
 
 interface ArticleRepositoryInterface
 {
-    public function createArticle(array $data);
+    public function createArticle(array $data, $userId);
 
     public function getAllArticles();
 

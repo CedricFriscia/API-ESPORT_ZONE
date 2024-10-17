@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\User\ArticleRepositoryInterface;
+use App\Repositories\Article\ArticleRepositoryInterface;
 
 class ArticleService
 {
@@ -15,8 +15,8 @@ class ArticleService
         return $this->articleRepository->getAllArticles();
     }
 
-    public function createArticle(array $data) {
-        return $this->articleRepository->createArticle($data);
+    public function createArticle(array $data, $userId) {
+        return $this->articleRepository->createArticle($data, $userId);
     }
 
     public function getArticlesByName(string $name){
@@ -32,11 +32,11 @@ class ArticleService
     }
  
     public function updateArticle(array $data, $id){
-
+        return $this->articleRepository->updateArticle($date, $id);
     }
 
-    public function deleteArticle($id){
-
+    public function deleteArticle($articleId){
+        return $this->articleRepository->deleteArticle($articleId);
     }
 
 

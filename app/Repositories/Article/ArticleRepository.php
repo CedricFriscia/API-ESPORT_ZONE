@@ -7,11 +7,17 @@ use App\Models\User;
 
 class ArticleRepository implements ArticleRepositoryInterface
 {
-  public function createArticle(array $data) {
-    return Article::create([
-      'name' => $data['name'],
-      'content' => $data['content'],
-  ]);
+  
+  public function createArticle(array $data, $userId)
+  {
+      $article = Article::create([
+          'name' => $data['name'],
+          'content' => $data['content'],
+      ]);
+  
+      $article->users()->attach($userId);
+  
+      return $article;
   }
 
   public function getAllArticles() {
@@ -19,21 +25,30 @@ class ArticleRepository implements ArticleRepositoryInterface
   }
 
   public function getArticlesByName(string $name) {
-    return Article::where('name', 'like', '%' . $name . '%')->get();
-  }
+    $articles = Article::where('name', 'like', '%' . $name . '%')->get();
+
+    return $articles->isNotEmpty() ? $articles : false;
+}
   
   public function getOneArticle(int $articleId) {
-    return Article::find('id', $articleId);
-  }
+    return Article::findOrFail($articleId);
+}
 
   public function userArticlesCount(int $userId) {
-    return Article::all();
+    $user = User::findOrFail($id);
+
+    return $user->articles(); 
   }
 
   public function updateArticle(array $data, $id) {
-    $user = User::findOrFail($id);
+    $article = $this->getOneArticle($id);
 
-    return $user->articles()->count(); 
+    if(!$article) {
+      return null; 
+    }
+
+    $article->update($data);
+    return $article->fresh();
   }
 
   public function deleteArticle(int $id) {

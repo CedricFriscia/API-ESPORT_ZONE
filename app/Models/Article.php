@@ -15,7 +15,6 @@ class Article extends Model
     protected $fillable = [
         'name', 
         'content',
-        'user_id',
     ];
 
     protected $casts = [

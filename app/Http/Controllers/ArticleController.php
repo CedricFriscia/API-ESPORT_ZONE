@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\ArticleService;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
@@ -14,7 +15,7 @@ class ArticleController extends Controller
         $this->articleService = $articleService;
     }
 
-    public function getAllUsers()
+    public function getAllArticles()
     {
         try {
             $articles = $this->articleService->getAllArticles();
@@ -59,10 +60,11 @@ class ArticleController extends Controller
 
     public function getOneArticle(Request $request)
     {
+    
        $articleId = $request->input('article_id');
-
+      
         try {
-            $articles = $this->articleService->getOneArticle( $articleId);
+            $articles = $this->articleService->getOneArticle($articleId);
             
             return response()->json([
                 'status' => 'success',
@@ -81,13 +83,16 @@ class ArticleController extends Controller
 
     public function createArticle(Request $request)
     {
+
+        $userId = Auth::user()->id;
+
         $data = $request->validate([
             'name' => 'required',
             'content' => 'required',
         ]);
 
         try {
-            $articles = $this->articleService->createArticle( $data);
+            $articles = $this->articleService->createArticle($data, $userId);
             
             return response()->json([
                 'status' => 'success',
@@ -109,11 +114,11 @@ class ArticleController extends Controller
         $articleId = $request->input('article_id');
 
         try {
-            $articles = $this->articleService->deleteArticle( $articleId);
+            $articles = $this->articleService->deleteArticle($articleId);
             
             return response()->json([
                 'status' => 'success',
-                'data' => $articles,
+                'message' => "Article supprimer",
             ]);
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la création  rticles: ' . $e->getMessage());
@@ -130,8 +135,9 @@ class ArticleController extends Controller
     {
         $userId = $request->input('user_id');
 
+
         try {
-            $userArticles = $this->articleService->userArticlesCount( $userId);
+            $userArticles = $this->articleService->userArticlesCount($userId);
             
             return response()->json([
                 'status' => 'success',
@@ -139,7 +145,7 @@ class ArticleController extends Controller
                 'total' => $userArticles->count(),
             ]);
         } catch (\Exception $e) {
-            \Log::error('Erreur lors de la création  rticles: ' . $e->getMessage());
+            \Log::error('Erreur lors de la récupération articles: ' . $e->getMessage());
             
             return response()->json([
                 'status' => 'error',
