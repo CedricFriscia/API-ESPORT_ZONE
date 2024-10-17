@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repositories\Auth\BookmarkRepositoryInterface;
+use App\Repositories\Bookmark\BookmarkRepositoryInterface;
 
 class BookmarkService
 {

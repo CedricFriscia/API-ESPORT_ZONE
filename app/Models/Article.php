@@ -22,9 +22,9 @@ class Article extends Model
         'updated_at' => 'datetime',
     ];
 
-    // protected static $marks = [
-    //     Bookmark::class,
-    // ];
+    protected static $marks = [
+        Bookmark::class,
+    ];
 
     public function users()
     {

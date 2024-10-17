@@ -8,7 +8,7 @@ use App\Http\Controllers\ArticleController;
 // use App\Http\Controllers\LinkController;
 // use App\Http\Controllers\TypeController;
 // use App\Http\Controllers\CategoryController;
-// use App\Http\Controllers\BookmarkController;
+use App\Http\Controllers\BookmarkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,10 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/article/all', [ArticleController::class, 'getAllArticles']);
     Route::get('/article/one', [ArticleController::class, 'getOneArticle']);
-    Route::get('/article/one', [ArticleController::class, 'getArticlesByName']);
+    Route::get('/article/name', [ArticleController::class, 'getArticlesByName']);
     Route::get('/article/delete', [ArticleController::class, 'deleteArticle']);
     Route::get('/article/user', [ArticleController::class, 'userArticlesCount']);
     Route::post('/article/create', [ArticleController::class, 'createArticle']);
   
-
+    Route::post('/bookmark', [BookmarkController::class, 'bookmark']);
+    Route::post('/unbookmark', [BookmarkController::class, 'unbookmark']);
+    Route::post('/bookmarked', [BookmarkController::class, 'isBookmarked']);
 });

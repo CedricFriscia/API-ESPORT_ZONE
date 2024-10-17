@@ -11,6 +11,9 @@ use App\Services\AuthService;
 use App\Repositories\Article\ArticleRepository;
 use App\Repositories\Article\ArticleRepositoryInterface;
 use App\Services\ArticleService;
+use App\Repositories\Bookmark\BookmarkRepository;
+use App\Repositories\Bookmark\BookmarkRepositoryInterface;
+use App\Services\BookmarkService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ArticleRepositoryInterface::class, ArticleRepository::class);
         $this->app->bind(ArticleService::class, function ($app) {
             return new ArticleService($app->make(ArticleRepositoryInterface::class));
+        });
+
+        $this->app->bind(BookmarkRepositoryInterface::class, BookmarkRepository::class);
+        $this->app->bind(BookmarkService::class, function ($app) {
+            return new BookmarkService($app->make(BookmarkRepositoryInterface::class));
         });
     }
 
