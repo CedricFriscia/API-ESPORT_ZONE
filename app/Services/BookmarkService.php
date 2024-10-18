@@ -16,7 +16,7 @@ class BookmarkService
     }
 
     public function unbookmark(int $articleId) {
-        return $this->bookmarkRepository->bookmark($articleId);
+        return $this->bookmarkRepository->unbookmark($articleId);
     }
 
     public function isBookmarked(int $articleId) {

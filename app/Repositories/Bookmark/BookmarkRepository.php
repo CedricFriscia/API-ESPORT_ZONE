@@ -39,11 +39,12 @@ class BookmarkRepository implements BookmarkRepositoryInterface
     }
 
     public function getUserBookmarks() {
+        
         $articles = Article::whereHasBookmark(
             auth()->user()
         )->get(); 
     
-        return $articles;  // Correction ici
+        return $articles;  
     }
 
 

@@ -83,6 +83,23 @@ class BookmarkController extends Controller
     }
 
     public function getUserBookmarks() {
-
+        
+        try {
+            $articles = $this->bookmarkService->getUserBookmarks();
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Articles bookmarked',
+                'data' => $articles,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors de la vérification des bookmark de l'utilisateur: " . $e->getMessage());
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Une erreur est survenue lors de la récupération des bookmark.',
+                'error_code' => $e->getCode()
+            ], 500);
+        }
     }
 }
