@@ -64,13 +64,23 @@ class BookmarkController extends Controller
         $articleId = $request->input('article_id');
         
         try {
-            $articles = $this->bookmarkService->unBookmark($articleId);
+            $isBookmarked = $this->bookmarkService->isBookmarked($articleId);
+
+            if($isBookmarked === true) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Article is bookmarked',
+                    'isBookmarked' => $isBookmarked,
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Article is not bookmared',
+                    'isBookmarked' => $isBookmarked,
+                ]);
+            }
             
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Article is bookmarked',
-                'data' => $articles,
-            ]);
+      
         } catch (\Exception $e) {
             \Log::error("Erreur lors de la vérification bookmark de l'article: " . $e->getMessage());
             

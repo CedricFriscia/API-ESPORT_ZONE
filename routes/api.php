@@ -40,6 +40,6 @@ Route::middleware('auth:sanctum')->group(function () {
   
     Route::post('/bookmark', [BookmarkController::class, 'bookmark']);
     Route::post('/unbookmark', [BookmarkController::class, 'unbookmark']);
-    Route::post('/bookmarked', [BookmarkController::class, 'isBookmarked']);
-    Route::post('/bookmarked/user/articles', [BookmarkController::class, 'getUserBookmarks']);
+    Route::get('/bookmarked', [BookmarkController::class, 'isBookmarked']);
+    Route::get('/bookmarked/user/articles', [BookmarkController::class, 'getUserBookmarks']);
 });
