@@ -133,17 +133,12 @@ class ArticleController extends Controller
 
     public function userArticlesCount(Request $request)
     {
-        $userId = $request->input('user_id');
-
-
+        $userId = Auth::user()->id;
+    
         try {
             $userArticles = $this->articleService->userArticlesCount($userId);
             
-            return response()->json([
-                'status' => 'success',
-                'data' => $userArticles,
-                'total' => $userArticles->count(),
-            ]);
+            return response()->json($userArticles->count());
         } catch (\Exception $e) {
             \Log::error('Erreur lors de la récupération articles: ' . $e->getMessage());
             

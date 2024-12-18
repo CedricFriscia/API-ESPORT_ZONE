@@ -28,11 +28,11 @@ class ArticleRepository implements ArticleRepositoryInterface
     $articles = Article::where('name', 'like', '%' . $name . '%')->get();
 
     return $articles->isNotEmpty() ? $articles : false;
-}
+  }
   
   public function getOneArticle(int $articleId) {
-    return Article::findOrFail($articleId);
-}
+    return Article::with('users')->findOrFail($articleId);
+  }
 
   public function userArticlesCount(int $userId) {
     $user = User::findOrFail($id);
